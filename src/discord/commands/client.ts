@@ -48,6 +48,17 @@ export const clientCommand = {
             .setDescription('Client name (partial match)')
             .setRequired(true)
         )
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('remove')
+        .setDescription('Remove a client')
+        .addStringOption(option =>
+          option
+            .setName('name')
+            .setDescription('Client name (partial match)')
+            .setRequired(true)
+        )
     ),
 
   async execute(interaction: ChatInputCommandInteraction, user: User) {
@@ -62,6 +73,9 @@ export const clientCommand = {
         break;
       case 'view':
         await handleView(interaction, user);
+        break;
+      case 'remove':
+        await handleRemove(interaction, user);
         break;
     }
   },
@@ -210,6 +224,45 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
       .join('\n');
     embed.addFields({ name: 'Recent Projects', value: projectsList });
   }
+
+  await interaction.editReply({ embeds: [embed] });
+}
+
+async function handleRemove(interaction: ChatInputCommandInteraction, user: User) {
+  const nameSearch = interaction.options.getString('name', true);
+
+  const client = await prisma.client.findFirst({
+    where: {
+      userId: user.id,
+      name: { contains: nameSearch },
+    },
+    include: {
+      projects: true,
+      invoices: true,
+    },
+  });
+
+  if (!client) {
+    await interaction.editReply({
+      content: `❌ No client found matching "${nameSearch}"`,
+    });
+    return;
+  }
+
+  // Delete the client (cascade will handle related records)
+  await prisma.client.delete({
+    where: { id: client.id },
+  });
+
+  const embed = new EmbedBuilder()
+    .setColor(0xED4245)
+    .setTitle('🗑️ Client Removed')
+    .setDescription(`**${client.name}** has been deleted`)
+    .addFields(
+      { name: 'Associated Projects', value: String(client.projects.length), inline: true },
+      { name: 'Associated Invoices', value: String(client.invoices.length), inline: true }
+    )
+    .setTimestamp();
 
   await interaction.editReply({ embeds: [embed] });
 }

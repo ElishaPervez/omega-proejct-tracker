@@ -115,6 +115,17 @@ export const projectCommand = {
             .setDescription('Project title (partial match)')
             .setRequired(true)
         )
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('remove')
+        .setDescription('Remove a project')
+        .addStringOption(option =>
+          option
+            .setName('title')
+            .setDescription('Project title (partial match)')
+            .setRequired(true)
+        )
     ),
 
   async execute(interaction: ChatInputCommandInteraction, user: User) {
@@ -135,6 +146,9 @@ export const projectCommand = {
         break;
       case 'view':
         await handleView(interaction, user);
+        break;
+      case 'remove':
+        await handleRemove(interaction, user);
         break;
     }
   },
@@ -391,6 +405,40 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
 
   embed.setFooter({ text: `Created ${formatShortDate(project.createdAt)}` });
   embed.setTimestamp();
+
+  await interaction.editReply({ embeds: [embed] });
+}
+
+async function handleRemove(interaction: ChatInputCommandInteraction, user: User) {
+  const titleSearch = interaction.options.getString('title', true);
+
+  const project = await prisma.project.findFirst({
+    where: {
+      userId: user.id,
+      title: { contains: titleSearch },
+    },
+  });
+
+  if (!project) {
+    await interaction.editReply({
+      content: `❌ No project found matching "${titleSearch}"`,
+    });
+    return;
+  }
+
+  await prisma.project.delete({
+    where: { id: project.id },
+  });
+
+  const embed = new EmbedBuilder()
+    .setColor(0xED4245)
+    .setTitle('🗑️ Project Removed')
+    .setDescription(`**${project.title}** has been deleted`)
+    .addFields(
+      { name: 'Status', value: project.status.replace('_', ' '), inline: true },
+      { name: 'Hours Worked', value: `${project.hoursWorked}h`, inline: true }
+    )
+    .setTimestamp();
 
   await interaction.editReply({ embeds: [embed] });
 }

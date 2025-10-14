@@ -26,10 +26,10 @@ export function Navbar() {
           <div className="flex">
             <Link href="/dashboard" className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Commission Manager
+                CM
               </span>
             </Link>
-            <div className="hidden sm:ml-8 sm:flex sm:space-x-4">
+            <div className="hidden sm:ml-8 sm:flex sm:space-x-4 items-center">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -38,7 +38,7 @@ export function Navbar() {
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      'inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                      'inline-flex items-center px-3 text-sm font-medium rounded-md transition-colors h-[80%] my-auto',
                       isActive
                         ? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'

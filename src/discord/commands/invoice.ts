@@ -92,6 +92,17 @@ export const invoiceCommand = {
             .setDescription('Invoice number')
             .setRequired(true)
         )
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('remove')
+        .setDescription('Remove an invoice')
+        .addStringOption(option =>
+          option
+            .setName('invoice_number')
+            .setDescription('Invoice number')
+            .setRequired(true)
+        )
     ),
 
   async execute(interaction: ChatInputCommandInteraction, user: User) {
@@ -109,6 +120,9 @@ export const invoiceCommand = {
         break;
       case 'view':
         await handleView(interaction, user);
+        break;
+      case 'remove':
+        await handleRemove(interaction, user);
         break;
     }
   },
@@ -328,6 +342,44 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
   }
 
   embed.setTimestamp();
+
+  await interaction.editReply({ embeds: [embed] });
+}
+
+async function handleRemove(interaction: ChatInputCommandInteraction, user: User) {
+  const invoiceNumber = interaction.options.getString('invoice_number', true);
+
+  const invoice = await prisma.invoice.findFirst({
+    where: {
+      userId: user.id,
+      invoiceNumber,
+    },
+    include: {
+      client: true,
+    },
+  });
+
+  if (!invoice) {
+    await interaction.editReply({
+      content: `❌ No invoice found with number "${invoiceNumber}"`,
+    });
+    return;
+  }
+
+  await prisma.invoice.delete({
+    where: { id: invoice.id },
+  });
+
+  const embed = new EmbedBuilder()
+    .setColor(0xED4245)
+    .setTitle('🗑️ Invoice Removed')
+    .setDescription(`**${invoice.invoiceNumber}** has been deleted`)
+    .addFields(
+      { name: 'Amount', value: formatCurrency(invoice.amount), inline: true },
+      { name: 'Client', value: invoice.client?.name || 'None', inline: true },
+      { name: 'Status', value: invoice.status, inline: true }
+    )
+    .setTimestamp();
 
   await interaction.editReply({ embeds: [embed] });
 }

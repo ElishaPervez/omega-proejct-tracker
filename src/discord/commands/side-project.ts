@@ -98,6 +98,17 @@ export const sideProjectCommand = {
             .setDescription('Hours worked')
             .setRequired(true)
         )
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('remove')
+        .setDescription('Remove a side project')
+        .addStringOption(option =>
+          option
+            .setName('title')
+            .setDescription('Side project title (partial match)')
+            .setRequired(true)
+        )
     ),
 
   async execute(interaction: ChatInputCommandInteraction, user: User) {
@@ -115,6 +126,9 @@ export const sideProjectCommand = {
         break;
       case 'hours':
         await handleAddHours(interaction, user);
+        break;
+      case 'remove':
+        await handleRemove(interaction, user);
         break;
     }
   },
@@ -288,6 +302,40 @@ async function handleAddHours(interaction: ChatInputCommandInteraction, user: Us
     .addFields(
       { name: 'Hours Added', value: `${hours}h`, inline: true },
       { name: 'Total Hours', value: `${updated.hoursWorked}h`, inline: true }
+    )
+    .setTimestamp();
+
+  await interaction.editReply({ embeds: [embed] });
+}
+
+async function handleRemove(interaction: ChatInputCommandInteraction, user: User) {
+  const titleSearch = interaction.options.getString('title', true);
+
+  const sideProject = await prisma.sideProject.findFirst({
+    where: {
+      userId: user.id,
+      title: { contains: titleSearch },
+    },
+  });
+
+  if (!sideProject) {
+    await interaction.editReply({
+      content: `❌ No side project found matching "${titleSearch}"`,
+    });
+    return;
+  }
+
+  await prisma.sideProject.delete({
+    where: { id: sideProject.id },
+  });
+
+  const embed = new EmbedBuilder()
+    .setColor(0xED4245)
+    .setTitle('🗑️ Side Project Removed')
+    .setDescription(`**${sideProject.title}** has been deleted`)
+    .addFields(
+      { name: 'Status', value: sideProject.status.replace('_', ' '), inline: true },
+      { name: 'Hours Worked', value: `${sideProject.hoursWorked}h`, inline: true }
     )
     .setTimestamp();
 
