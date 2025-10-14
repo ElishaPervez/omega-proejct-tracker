@@ -22,8 +22,11 @@ interface FocusTimerProps {
 export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
   const [activeTimer, setActiveTimer] = useState<Timer | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(
+    projects[0]?.id || ''
+  );
   const [isLoading, setIsLoading] = useState(false);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
   // Fetch active timer on mount
   useEffect(() => {
@@ -63,13 +66,18 @@ export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
   };
 
   const startTimer = async () => {
+    if (!selectedProjectId) {
+      setIsProjectModalOpen(true);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await fetch('/api/timer/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          projectId: selectedProjectId || null,
+          projectId: selectedProjectId,
         }),
       });
 
@@ -78,6 +86,7 @@ export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
         setActiveTimer(data);
         setElapsedSeconds(0);
         onTimerUpdate?.();
+        setIsProjectModalOpen(false);
       } else {
         const error = await response.json();
         alert(error.error || 'Failed to start timer');
@@ -169,16 +178,13 @@ export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
           {!isTimerActive && projects.length > 0 && (
             <div className="mb-6">
               <label className="block text-white/80 text-sm font-medium mb-2">
-                Select Project (Optional)
+                Select Project
               </label>
               <select
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
                 className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
               >
-                <option value="" className="bg-slate-800">
-                  No project (General time)
-                </option>
                 {projects.map((project) => (
                   <option key={project.id} value={project.id} className="bg-slate-800">
                     {project.title}
@@ -249,6 +255,45 @@ export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
           animation: shimmer 3s infinite;
         }
       `}</style>
+
+      {isProjectModalOpen && (
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-20">
+          <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl max-w-sm w-full mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">
+              Please select a project
+            </h3>
+            <div className="mb-6">
+              <select
+                value={selectedProjectId}
+                onChange={(e) => setSelectedProjectId(e.target.value)}
+                className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+              >
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id} className="bg-slate-800">
+                    {project.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setIsProjectModalOpen(false)}
+                className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-xl transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={startTimer}
+                disabled={isLoading || !selectedProjectId}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-white/90 text-slate-900 font-semibold rounded-xl transition-all disabled:opacity-50"
+              >
+                <Play className="w-5 h-5" />
+                Start
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
