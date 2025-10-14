@@ -12,7 +12,7 @@ import {
   CheckCircle2,
   TrendingUp,
 } from 'lucide-react';
-import { formatCurrency, formatShortDate } from '@/lib/utils';
+import { formatCurrency, formatShortDate, formatTime } from '@/lib/utils';
 
 export default async function DashboardPage() {
   const user = await requireAuth();
@@ -47,8 +47,8 @@ export default async function DashboardPage() {
     totalSideProjects: sideProjects.length,
     activeSideProjects: sideProjects.filter(p => p.status === 'IN_PROGRESS').length,
     totalClients: clients.length,
-    totalHoursWorked: projects.reduce((sum, p) => sum + p.hoursWorked, 0) +
-      sideProjects.reduce((sum, p) => sum + p.hoursWorked, 0),
+    totalWorkedSeconds: projects.reduce((sum, p) => sum + p.workedSeconds, 0) +
+      sideProjects.reduce((sum, p) => sum + p.workedSeconds, 0),
     totalRevenue: invoices
       .filter(i => i.status === 'PAID')
       .reduce((sum, i) => sum + i.amount, 0),
@@ -83,7 +83,7 @@ export default async function DashboardPage() {
             Dashboard
           </h1>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Welcome back, {user.name}! Here's your project overview.
+            Welcome back, {user.name}! Here&apos;s your project overview.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ export default async function DashboardPage() {
           />
           <StatCard
             title="Hours Worked"
-            value={`${stats.totalHoursWorked.toFixed(1)}h`}
+            value={formatTime(stats.totalWorkedSeconds)}
             icon={Clock}
             iconColor="text-orange-600"
           />
