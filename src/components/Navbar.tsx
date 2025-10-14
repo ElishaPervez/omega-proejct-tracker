@@ -38,14 +38,19 @@ export function Navbar() {
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      'inline-flex items-center px-3 text-sm font-medium rounded-md transition-colors h-[60%] my-auto',
+                      'relative inline-flex items-center px-3 text-sm font-medium rounded-md transition-all duration-300 h-[60%] my-auto overflow-hidden',
                       isActive
-                        ? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200'
+                        ? 'bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white shadow-lg'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
                     )}
                   >
-                    <Icon className="w-4 h-4 mr-2" />
-                    {item.name}
+                    {isActive && (
+                      <div className="absolute inset-0 opacity-30">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-shimmer" />
+                      </div>
+                    )}
+                    <Icon className="w-4 h-4 mr-2 relative z-10" />
+                    <span className="relative z-10">{item.name}</span>
                   </Link>
                 );
               })}
@@ -65,6 +70,19 @@ export function Navbar() {
           </div>
         </div>
       </div>
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite;
+        }
+      `}</style>
     </nav>
   );
 }
