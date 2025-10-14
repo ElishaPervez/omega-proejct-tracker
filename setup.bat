@@ -4,51 +4,16 @@ echo ========================================
 echo   Omega Project Tracker - Setup
 echo ========================================
 echo.
-echo This will install all dependencies...
-echo.
-
-REM Check if Node.js is installed
-node --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: Node.js is not installed!
-    echo.
-    echo Please install Node.js from: https://nodejs.org/
-    echo.
-    pause
-    exit /b 1
-)
-
-echo Node.js version:
-node --version
-echo.
-
-REM Check if npm is installed
-echo Checking npm...
-npm --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ERROR: npm is not installed!
-    echo.
-    pause
-    exit /b 1
-)
-
-echo npm version:
-npm --version
-echo.
-
-echo ========================================
-echo   Installing Dependencies
-echo ========================================
-echo.
-echo This may take 2-5 minutes...
-echo Please wait...
+echo Installing all dependencies...
+echo This will take 2-5 minutes...
 echo.
 
 npm install
 
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo.
-    echo ERROR: Failed to install dependencies!
+    echo ERROR: Installation failed!
+    echo Make sure Node.js is installed: https://nodejs.org/
     echo.
     pause
     exit /b 1
