@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  discordId     String?   @unique
+  discordUsername String?
+  accounts      Account[]
+  sessions      Session[]
+  projects      Project[]
+  sideProjects  SideProject[]
+  clients       Client[]
+  invoices      Invoice[]
+  timers        Timer[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Project {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  status      String          @default("NOT_STARTED")
+  priority    String          @default("MEDIUM")
+  startDate   DateTime?
+  dueDate     DateTime?
+  completedAt DateTime?
+  hoursWorked Float           @default(0)
+  estimatedHours Float?
+  clientId    String?
+  client      Client?         @relation(fields: [clientId], references: [id])
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices    Invoice[]
+  timers      Timer[]
+  tags        String?         // Comma-separated tags
+  notes       String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model SideProject {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  status      String          @default("NOT_STARTED")
+  priority    String          @default("LOW")
+  startDate   DateTime?
+  dueDate     DateTime?
+  completedAt DateTime?
+  hoursWorked Float           @default(0)
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags        String?
+  notes       String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model Client {
+  id          String    @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  company     String?
+  discordId   String?
+  notes       String?
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects    Project[]
+  invoices    Invoice[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  invoiceNumber String      @unique
+  amount      Float
+  currency    String        @default("USD")
+  status      String        @default("DRAFT")
+  issuedDate  DateTime      @default(now())
+  dueDate     DateTime
+  paidDate    DateTime?
+  description String?
+  clientId    String?
+  client      Client?       @relation(fields: [clientId], references: [id])
+  projectId   String?
+  project     Project?      @relation(fields: [projectId], references: [id])
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Timer {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id])
+  startTime   DateTime  @default(now())
+  endTime     DateTime?
+  duration    Int       @default(0) // Duration in seconds
+  isActive    Boolean   @default(true)
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

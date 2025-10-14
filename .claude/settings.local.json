@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"console.log(require(''crypto'').randomBytes(32).toString(''base64''))\")",
+      "Bash(npm install)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npm run discord:register:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev)",
+      "Bash(timeout:*)",
+      "Bash(npm run discord:dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(npx prisma generate:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
