@@ -193,7 +193,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
     embed.addFields({ name: 'Description', value: description });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleList(interaction: ChatInputCommandInteraction, user: User) {
@@ -216,7 +216,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (projects.length === 0) {
-    await interaction.reply({
+    await interaction.editReply({
       content: '📋 No projects found. Create one with `/project create`',
       ephemeral: true,
     });
@@ -261,7 +261,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
     embed.setFooter({ text: `Showing 10 of ${projects.length} projects` });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleUpdate(interaction: ChatInputCommandInteraction, user: User) {
@@ -276,7 +276,7 @@ async function handleUpdate(interaction: ChatInputCommandInteraction, user: User
   });
 
   if (!project) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No project found matching "${titleSearch}"`,
       ephemeral: true,
     });
@@ -301,7 +301,7 @@ async function handleUpdate(interaction: ChatInputCommandInteraction, user: User
     )
     .setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleAddHours(interaction: ChatInputCommandInteraction, user: User) {
@@ -316,7 +316,7 @@ async function handleAddHours(interaction: ChatInputCommandInteraction, user: Us
   });
 
   if (!project) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No project found matching "${titleSearch}"`,
       ephemeral: true,
     });
@@ -340,7 +340,7 @@ async function handleAddHours(interaction: ChatInputCommandInteraction, user: Us
     )
     .setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleView(interaction: ChatInputCommandInteraction, user: User) {
@@ -357,7 +357,7 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (!project) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No project found matching "${titleSearch}"`,
       ephemeral: true,
     });
@@ -392,5 +392,5 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
   embed.setFooter({ text: `Created ${formatShortDate(project.createdAt)}` });
   embed.setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }

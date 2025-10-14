@@ -90,7 +90,7 @@ async function handleAdd(interaction: ChatInputCommandInteraction, user: User) {
   if (email) embed.addFields({ name: 'Email', value: email, inline: true });
   if (company) embed.addFields({ name: 'Company', value: company, inline: true });
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleList(interaction: ChatInputCommandInteraction, user: User) {
@@ -115,7 +115,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (clients.length === 0) {
-    await interaction.reply({
+    await interaction.editReply({
       content: '📋 No clients found. Add one with `/client add`',
       ephemeral: true,
     });
@@ -154,7 +154,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
     embed.setFooter({ text: `Showing 15 of ${clients.length} clients` });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleView(interaction: ChatInputCommandInteraction, user: User) {
@@ -178,7 +178,7 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (!client) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No client found matching "${nameSearch}"`,
       ephemeral: true,
     });
@@ -211,5 +211,5 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
     embed.addFields({ name: 'Recent Projects', value: projectsList });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }

@@ -148,7 +148,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
     embed.addFields({ name: 'Description', value: description });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleList(interaction: ChatInputCommandInteraction, user: User) {
@@ -168,7 +168,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (sideProjects.length === 0) {
-    await interaction.reply({
+    await interaction.editReply({
       content: '📋 No side projects found. Create one with `/sideproject create`',
       ephemeral: true,
     });
@@ -212,7 +212,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
     embed.setFooter({ text: `Showing 10 of ${sideProjects.length} side projects` });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleUpdate(interaction: ChatInputCommandInteraction, user: User) {
@@ -227,7 +227,7 @@ async function handleUpdate(interaction: ChatInputCommandInteraction, user: User
   });
 
   if (!sideProject) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No side project found matching "${titleSearch}"`,
       ephemeral: true,
     });
@@ -252,7 +252,7 @@ async function handleUpdate(interaction: ChatInputCommandInteraction, user: User
     )
     .setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleAddHours(interaction: ChatInputCommandInteraction, user: User) {
@@ -267,7 +267,7 @@ async function handleAddHours(interaction: ChatInputCommandInteraction, user: Us
   });
 
   if (!sideProject) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No side project found matching "${titleSearch}"`,
       ephemeral: true,
     });
@@ -291,5 +291,5 @@ async function handleAddHours(interaction: ChatInputCommandInteraction, user: Us
     )
     .setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }

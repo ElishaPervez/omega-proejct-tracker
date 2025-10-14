@@ -34,6 +34,9 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   }
 
   try {
+    // Defer reply immediately to prevent timeout (we have 3 seconds to respond)
+    await interaction.deferReply({ ephemeral: true });
+
     // Find or create user based on Discord ID
     let user = await prisma.user.findUnique({
       where: { discordId: interaction.user.id },
@@ -57,13 +60,12 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
 
     const errorMessage = {
       content: '❌ There was an error executing this command!',
-      ephemeral: true,
     };
 
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(errorMessage);
+      await interaction.editReply(errorMessage);
     } else {
-      await interaction.reply(errorMessage);
+      await interaction.reply({ ...errorMessage, ephemeral: true });
     }
   }
 });

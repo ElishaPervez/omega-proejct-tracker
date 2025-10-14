@@ -128,7 +128,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
   });
 
   if (!client) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No client found matching "${clientName}". Add them first with \`/client add\``,
       ephemeral: true,
     });
@@ -169,7 +169,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
     embed.addFields({ name: 'Description', value: description });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleList(interaction: ChatInputCommandInteraction, user: User) {
@@ -188,7 +188,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (invoices.length === 0) {
-    await interaction.reply({
+    await interaction.editReply({
       content: '📋 No invoices found. Create one with `/invoice create`',
       ephemeral: true,
     });
@@ -231,7 +231,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
     embed.setFooter({ text: `Showing 10 of ${invoices.length} invoices` });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleUpdate(interaction: ChatInputCommandInteraction, user: User) {
@@ -246,7 +246,7 @@ async function handleUpdate(interaction: ChatInputCommandInteraction, user: User
   });
 
   if (!invoice) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No invoice found with number "${invoiceNumber}"`,
       ephemeral: true,
     });
@@ -272,7 +272,7 @@ async function handleUpdate(interaction: ChatInputCommandInteraction, user: User
     )
     .setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleView(interaction: ChatInputCommandInteraction, user: User) {
@@ -290,7 +290,7 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
   });
 
   if (!invoice) {
-    await interaction.reply({
+    await interaction.editReply({
       content: `❌ No invoice found with number "${invoiceNumber}"`,
       ephemeral: true,
     });
@@ -329,5 +329,5 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
 
   embed.setTimestamp();
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 }
