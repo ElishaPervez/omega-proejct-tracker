@@ -23,6 +23,7 @@ node --version
 echo.
 
 REM Check if npm is installed
+echo Checking npm...
 npm --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo ERROR: npm is not installed!
@@ -35,11 +36,15 @@ echo npm version:
 npm --version
 echo.
 
-echo Installing dependencies...
-echo This may take a few minutes...
+echo ========================================
+echo   Installing Dependencies
+echo ========================================
+echo.
+echo This may take 2-5 minutes...
+echo Please wait...
 echo.
 
-call npm install
+npm install
 
 if %errorlevel% neq 0 (
     echo.
