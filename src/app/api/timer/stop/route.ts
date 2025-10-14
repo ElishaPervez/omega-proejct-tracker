@@ -30,8 +30,6 @@ export async function POST(request: NextRequest) {
     const durationInSeconds = Math.floor(
       (endTime.getTime() - activeTimer.startTime.getTime()) / 1000
     );
-    const durationInHours = durationInSeconds / 3600;
-
     // Stop timer
     const stoppedTimer = await prisma.timer.update({
       where: { id: activeTimer.id },
@@ -45,13 +43,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Add hours to project if associated
+    // Add seconds to project if associated
     if (activeTimer.projectId) {
       await prisma.project.update({
         where: { id: activeTimer.projectId },
         data: {
-          hoursWorked: {
-            increment: durationInHours,
+          workedSeconds: {
+            increment: durationInSeconds,
           },
         },
       });
