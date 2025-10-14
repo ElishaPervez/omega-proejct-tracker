@@ -38,7 +38,7 @@ export function Navbar() {
                     key={item.name}
                     href={item.href}
                     className={cn(
-                      'inline-flex items-center px-3 text-sm font-medium rounded-md transition-colors h-[80%] my-auto',
+                      'inline-flex items-center px-3 text-sm font-medium rounded-md transition-colors h-[60%] my-auto',
                       isActive
                         ? 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'
