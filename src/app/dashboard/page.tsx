@@ -135,7 +135,7 @@ export default async function DashboardPage() {
             iconColor="text-green-600"
           />
           <StatCard
-            title="Hours Worked"
+            title="Worked"
             value={formatTime(stats.totalWorkedSeconds)}
             icon={Clock}
             iconColor="text-orange-600"

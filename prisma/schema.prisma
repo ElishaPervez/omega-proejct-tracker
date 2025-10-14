@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,22 +8,22 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  discordId     String?   @unique
+  id              String        @id @default(cuid())
+  name            String?
+  email           String?       @unique
+  emailVerified   DateTime?
+  image           String?
+  discordId       String?       @unique
   discordUsername String?
-  accounts      Account[]
-  sessions      Session[]
-  projects      Project[]
-  sideProjects  SideProject[]
-  clients       Client[]
-  invoices      Invoice[]
-  timers        Timer[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  accounts        Account[]
+  clients         Client[]
+  invoices        Invoice[]
+  projects        Project[]
+  sessions        Session[]
+  sideProjects    SideProject[]
+  timers          Timer[]
 }
 
 model Account {
@@ -42,8 +39,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -65,94 +61,94 @@ model VerificationToken {
 }
 
 model Project {
-  id          String          @id @default(cuid())
-  title       String
-  description String?
-  status      String          @default("NOT_STARTED")
-  priority    String          @default("MEDIUM")
-  startDate   DateTime?
-  dueDate     DateTime?
-  completedAt DateTime?
-  workedSeconds Int           @default(0)
+  id             String    @id @default(cuid())
+  title          String
+  description    String?
+  status         String    @default("NOT_STARTED")
+  priority       String    @default("MEDIUM")
+  startDate      DateTime?
+  dueDate        DateTime?
+  completedAt    DateTime?
+  workedSeconds  Int       @default(0)
   estimatedHours Float?
-  clientId    String?
-  client      Client?         @relation(fields: [clientId], references: [id])
-  userId      String
-  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  invoices    Invoice[]
-  timers      Timer[]
-  tags        String?         // Comma-separated tags
-  notes       String?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  clientId       String?
+  userId         String
+  tags           String?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  invoices       Invoice[]
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client         Client?   @relation(fields: [clientId], references: [id])
+  timers         Timer[]
 }
 
 model SideProject {
-  id          String          @id @default(cuid())
-  title       String
-  description String?
-  status      String          @default("NOT_STARTED")
-  priority    String          @default("LOW")
-  startDate   DateTime?
-  dueDate     DateTime?
-  completedAt DateTime?
-  workedSeconds Int           @default(0)
-  userId      String
-  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags        String?
-  notes       String?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  status        String    @default("NOT_STARTED")
+  priority      String    @default("LOW")
+  startDate     DateTime?
+  dueDate       DateTime?
+  completedAt   DateTime?
+  workedSeconds Int       @default(0)
+  userId        String
+  tags          String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Client {
-  id          String    @id @default(cuid())
-  name        String
-  email       String?
-  phone       String?
-  company     String?
-  discordId   String?
-  notes       String?
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projects    Project[]
-  invoices    Invoice[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String    @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  company   String?
+  discordId String?
+  notes     String?
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+  projects  Project[]
 }
 
 model Invoice {
-  id          String        @id @default(cuid())
-  invoiceNumber String      @unique
-  amount      Float
-  currency    String        @default("USD")
-  status      String        @default("DRAFT")
-  issuedDate  DateTime      @default(now())
-  dueDate     DateTime
-  paidDate    DateTime?
-  description String?
-  clientId    String?
-  client      Client?       @relation(fields: [clientId], references: [id])
-  projectId   String?
-  project     Project?      @relation(fields: [projectId], references: [id])
-  userId      String
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  notes       String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id            String    @id @default(cuid())
+  invoiceNumber String    @unique
+  amount        Float
+  currency      String    @default("USD")
+  status        String    @default("DRAFT")
+  issuedDate    DateTime  @default(now())
+  dueDate       DateTime
+  paidDate      DateTime?
+  description   String?
+  clientId      String?
+  projectId     String?
+  userId        String
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project?  @relation(fields: [projectId], references: [id])
+  client        Client?   @relation(fields: [clientId], references: [id])
 }
 
 model Timer {
   id          String    @id @default(cuid())
   userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   projectId   String?
-  project     Project?  @relation(fields: [projectId], references: [id])
   startTime   DateTime  @default(now())
   endTime     DateTime?
-  duration    Int       @default(0) // Duration in seconds
+  duration    Int       @default(0)
   isActive    Boolean   @default(true)
   description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  project     Project?  @relation(fields: [projectId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

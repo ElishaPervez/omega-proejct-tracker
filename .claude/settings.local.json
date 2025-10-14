@@ -11,7 +11,12 @@
       "Bash(npm run discord:dev:*)",
       "Bash(taskkill:*)",
       "Bash(netstat:*)",
-      "Bash(npx prisma generate:*)"
+      "Bash(npx prisma generate:*)",
+      "Bash(if exist \"prisma\\dev.db\" del /f \"prisma\\dev.db\")",
+      "Bash(if exist \"prisma\\dev.db-journal\" del /f \"prisma\\dev.db-journal\")",
+      "Bash(if exist \".env\" del /f \".env\")",
+      "Bash(echo Database and .env cleared successfully!)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

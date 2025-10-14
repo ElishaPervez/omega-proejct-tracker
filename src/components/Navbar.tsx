@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { LayoutDashboard, Briefcase, FolderKanban, Users, FileText, LogOut } from 'lucide-react';
+import { LayoutDashboard, Briefcase, FolderKanban, Users, FileText, Settings, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
@@ -12,6 +12,7 @@ const navigation = [
   { name: 'Side Projects', href: '/side-projects', icon: FolderKanban },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Invoices', href: '/invoices', icon: FileText },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Navbar() {

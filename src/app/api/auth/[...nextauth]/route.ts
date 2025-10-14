@@ -18,46 +18,10 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Check if user with this Discord ID already exists (from bot usage)
+      // Simply add Discord ID to user after OAuth login
       if (account?.provider === 'discord' && profile && user.id) {
-        const existingDiscordUser = await prisma.user.findUnique({
-          where: { discordId: profile.id as string },
-        });
-
-        if (existingDiscordUser && existingDiscordUser.id !== user.id) {
-          // Merge: Save OAuth user data, then merge accounts
-          const oauthEmail = user.email;
-          const oauthName = user.name;
-          const oauthImage = user.image;
-
-          // Move accounts to existing Discord user
-          await prisma.account.updateMany({
-            where: { userId: user.id },
-            data: { userId: existingDiscordUser.id },
-          });
-
-          // Move sessions to existing Discord user
-          await prisma.session.updateMany({
-            where: { userId: user.id },
-            data: { userId: existingDiscordUser.id },
-          });
-
-          // Delete the duplicate OAuth user first (frees up the email constraint)
-          await prisma.user.delete({
-            where: { id: user.id },
-          });
-
-          // Now update existing Discord user with OAuth info
-          await prisma.user.update({
-            where: { id: existingDiscordUser.id },
-            data: {
-              email: oauthEmail || existingDiscordUser.email,
-              name: oauthName || existingDiscordUser.name,
-              image: oauthImage || existingDiscordUser.image,
-            },
-          });
-        } else if (!existingDiscordUser) {
-          // No existing Discord user, just update current user
+        try {
+          // Just update the user with Discord info (adapter already created the user)
           await prisma.user.update({
             where: { id: user.id },
             data: {
@@ -65,6 +29,9 @@ export const authOptions: NextAuthOptions = {
               discordUsername: profile.username as string,
             },
           });
+        } catch (error) {
+          console.error('Error updating Discord ID:', error);
+          // Continue anyway - this is not critical
         }
       }
       return true;
