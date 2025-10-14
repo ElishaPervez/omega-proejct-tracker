@@ -22,9 +22,7 @@ interface FocusTimerProps {
 export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
   const [activeTimer, setActiveTimer] = useState<Timer | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(
-    projects[0]?.id || ''
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
@@ -185,6 +183,9 @@ export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
                 onChange={(e) => setSelectedProjectId(e.target.value)}
                 className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
               >
+                <option value="" disabled className="bg-slate-800">
+                  Select a project
+                </option>
                 {projects.map((project) => (
                   <option key={project.id} value={project.id} className="bg-slate-800">
                     {project.title}
@@ -268,6 +269,9 @@ export function FocusTimer({ onTimerUpdate, projects = [] }: FocusTimerProps) {
                 onChange={(e) => setSelectedProjectId(e.target.value)}
                 className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
               >
+                <option value="" disabled className="bg-slate-800">
+                  Select a project
+                </option>
                 {projects.map((project) => (
                   <option key={project.id} value={project.id} className="bg-slate-800">
                     {project.title}

@@ -2,7 +2,7 @@ import { requireAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Navbar } from '@/components/Navbar';
 import Link from 'next/link';
-import { formatShortDate } from '@/lib/utils';
+import { formatShortDate, formatTime } from '@/lib/utils';
 
 export default async function ProjectsPage() {
   const user = await requireAuth();
@@ -86,7 +86,7 @@ export default async function ProjectsPage() {
                       {project.client && (
                         <span>Client: {project.client.name}</span>
                       )}
-                      <span>Hours: {project.hoursWorked}h</span>
+                      <span>Hours: {formatTime(project.workedSeconds)}</span>
                       {project.dueDate && (
                         <span>Due: {formatShortDate(project.dueDate)}</span>
                       )}
