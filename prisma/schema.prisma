@@ -71,6 +71,7 @@ model Project {
   completedAt    DateTime?
   workedSeconds  Int       @default(0)
   estimatedHours Float?
+  revenue        Float     @default(0)
   clientId       String?
   userId         String
   tags           String?

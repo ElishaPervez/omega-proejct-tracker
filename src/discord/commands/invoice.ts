@@ -26,6 +26,7 @@ export const invoiceCommand = {
             .setName('client')
             .setDescription('Client name')
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addStringOption(option =>
           option
@@ -67,6 +68,7 @@ export const invoiceCommand = {
             .setName('invoice_number')
             .setDescription('Invoice number')
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addStringOption(option =>
           option
@@ -91,6 +93,7 @@ export const invoiceCommand = {
             .setName('invoice_number')
             .setDescription('Invoice number')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     )
     .addSubcommand(subcommand =>
@@ -102,6 +105,7 @@ export const invoiceCommand = {
             .setName('invoice_number')
             .setDescription('Invoice number')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     ),
 

@@ -47,6 +47,7 @@ export const clientCommand = {
             .setName('name')
             .setDescription('Client name (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     )
     .addSubcommand(subcommand =>
@@ -58,6 +59,7 @@ export const clientCommand = {
             .setName('name')
             .setDescription('Client name (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     ),
 
@@ -115,6 +117,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
         select: {
           id: true,
           status: true,
+          revenue: true,
         },
       },
       invoices: {
@@ -145,9 +148,12 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
   clients.slice(0, 15).forEach(client => {
     const projectCount = client.projects.length;
     const activeProjects = client.projects.filter(p => p.status === 'IN_PROGRESS').length;
-    const totalRevenue = client.invoices
+    const invoiceRevenue = client.invoices
       .filter(i => i.status === 'PAID')
       .reduce((sum, i) => sum + i.amount, 0);
+    const projectRevenue = client.projects
+      .reduce((sum, p) => sum + (p.revenue || 0), 0);
+    const totalRevenue = invoiceRevenue + projectRevenue;
 
     let value = `Projects: ${projectCount} (${activeProjects} active)`;
     if (totalRevenue > 0) {
@@ -207,9 +213,14 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
   if (client.email) embed.addFields({ name: 'Email', value: client.email, inline: true });
   if (client.company) embed.addFields({ name: 'Company', value: client.company, inline: true });
 
-  const totalRevenue = client.invoices
+  const invoiceRevenue = client.invoices
     .filter(i => i.status === 'PAID')
     .reduce((sum, i) => sum + i.amount, 0);
+
+  const projectRevenue = client.projects
+    .reduce((sum, p) => sum + (p.revenue || 0), 0);
+
+  const totalRevenue = invoiceRevenue + projectRevenue;
 
   embed.addFields(
     { name: 'Projects', value: String(client.projects.length), inline: true },

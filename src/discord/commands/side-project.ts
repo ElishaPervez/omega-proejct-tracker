@@ -67,6 +67,7 @@ export const sideProjectCommand = {
             .setName('title')
             .setDescription('Side project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addStringOption(option =>
           option
@@ -91,6 +92,7 @@ export const sideProjectCommand = {
             .setName('title')
             .setDescription('Side project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addNumberOption(option =>
           option
@@ -108,6 +110,7 @@ export const sideProjectCommand = {
             .setName('title')
             .setDescription('Side project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     ),
 

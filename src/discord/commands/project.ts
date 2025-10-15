@@ -44,6 +44,13 @@ export const projectCommand = {
             .setName('client')
             .setDescription('Client name')
             .setRequired(false)
+            .setAutocomplete(true)
+        )
+        .addNumberOption(option =>
+          option
+            .setName('revenue')
+            .setDescription('Project revenue/finalized price')
+            .setRequired(false)
         )
     )
     .addSubcommand(subcommand =>
@@ -73,6 +80,7 @@ export const projectCommand = {
             .setName('title')
             .setDescription('Project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addStringOption(option =>
           option
@@ -97,6 +105,7 @@ export const projectCommand = {
             .setName('title')
             .setDescription('Project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
         .addNumberOption(option =>
           option
@@ -114,6 +123,7 @@ export const projectCommand = {
             .setName('title')
             .setDescription('Project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     )
     .addSubcommand(subcommand =>
@@ -125,6 +135,7 @@ export const projectCommand = {
             .setName('title')
             .setDescription('Project title (partial match)')
             .setRequired(true)
+            .setAutocomplete(true)
         )
     ),
 
@@ -159,6 +170,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
   const description = interaction.options.getString('description');
   const priority = (interaction.options.getString('priority') as ProjectPriority) || 'MEDIUM';
   const clientName = interaction.options.getString('client');
+  const revenue = interaction.options.getNumber('revenue') || 0;
 
   let client = null;
   if (clientName) {
@@ -184,6 +196,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
       title,
       description,
       priority,
+      revenue,
       userId: user.id,
       clientId: client?.id,
     },
@@ -205,6 +218,10 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
 
   if (description) {
     embed.addFields({ name: 'Description', value: description });
+  }
+
+  if (revenue > 0) {
+    embed.addFields({ name: 'Revenue', value: `$${revenue.toFixed(2)}`, inline: true });
   }
 
   await interaction.editReply({ embeds: [embed] });
@@ -393,6 +410,10 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
 
   if (project.client) {
     embed.addFields({ name: 'Client', value: project.client.name, inline: true });
+  }
+
+  if (project.revenue > 0) {
+    embed.addFields({ name: 'Revenue', value: `$${project.revenue.toFixed(2)}`, inline: true });
   }
 
   if (project.dueDate) {
