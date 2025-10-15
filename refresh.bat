@@ -35,6 +35,13 @@ if exist "prisma\dev.db-journal" (
     echo   - No journal file found
 )
 
+if exist "prisma\migrations" (
+    rmdir /s /q "prisma\migrations"
+    echo   - Cleared migrations folder
+) else (
+    echo   - No migrations folder found
+)
+
 echo.
 echo ========================================
 echo   Creating Database Tables...
