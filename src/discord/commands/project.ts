@@ -48,8 +48,8 @@ export const projectCommand = {
         )
         .addNumberOption(option =>
           option
-            .setName('revenue')
-            .setDescription('Project revenue/finalized price')
+            .setName('budget')
+            .setDescription('Project budget/estimated cost')
             .setRequired(false)
         )
     )
@@ -170,7 +170,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
   const description = interaction.options.getString('description');
   const priority = (interaction.options.getString('priority') as ProjectPriority) || 'MEDIUM';
   const clientName = interaction.options.getString('client');
-  const revenue = interaction.options.getNumber('revenue') || 0;
+  const budget = interaction.options.getNumber('budget') || 0;
 
   let client = null;
   if (clientName) {
@@ -196,7 +196,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
       title,
       description,
       priority,
-      revenue,
+      budget,
       userId: user.id,
       clientId: client?.id,
     },
@@ -220,8 +220,8 @@ async function handleCreate(interaction: ChatInputCommandInteraction, user: User
     embed.addFields({ name: 'Description', value: description });
   }
 
-  if (revenue > 0) {
-    embed.addFields({ name: 'Revenue', value: `$${revenue.toFixed(2)}`, inline: true });
+  if (budget > 0) {
+    embed.addFields({ name: 'Budget', value: `$${budget.toFixed(2)}`, inline: true });
   }
 
   await interaction.editReply({ embeds: [embed] });
@@ -412,8 +412,8 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
     embed.addFields({ name: 'Client', value: project.client.name, inline: true });
   }
 
-  if (project.revenue > 0) {
-    embed.addFields({ name: 'Revenue', value: `$${project.revenue.toFixed(2)}`, inline: true });
+  if (project.budget > 0) {
+    embed.addFields({ name: 'Budget', value: `$${project.budget.toFixed(2)}`, inline: true });
   }
 
   if (project.dueDate) {

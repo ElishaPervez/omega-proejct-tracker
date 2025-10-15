@@ -117,7 +117,7 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
         select: {
           id: true,
           status: true,
-          revenue: true,
+          budget: true,
         },
       },
       invoices: {
@@ -151,13 +151,13 @@ async function handleList(interaction: ChatInputCommandInteraction, user: User) 
     const invoiceRevenue = client.invoices
       .filter(i => i.status === 'PAID')
       .reduce((sum, i) => sum + i.amount, 0);
-    const projectRevenue = client.projects
-      .reduce((sum, p) => sum + (p.revenue || 0), 0);
-    const totalRevenue = invoiceRevenue + projectRevenue;
+    const projectBudget = client.projects
+      .reduce((sum, p) => sum + (p.budget || 0), 0);
+    const totalRevenue = invoiceRevenue + projectBudget;
 
     let value = `Projects: ${projectCount} (${activeProjects} active)`;
     if (totalRevenue > 0) {
-      value += ` | Revenue: $${totalRevenue.toFixed(2)}`;
+      value += ` | Budget: $${totalRevenue.toFixed(2)}`;
     }
     if (client.company) {
       value += ` | ${client.company}`;
@@ -217,10 +217,10 @@ async function handleView(interaction: ChatInputCommandInteraction, user: User) 
     .filter(i => i.status === 'PAID')
     .reduce((sum, i) => sum + i.amount, 0);
 
-  const projectRevenue = client.projects
-    .reduce((sum, p) => sum + (p.revenue || 0), 0);
+  const projectBudget = client.projects
+    .reduce((sum, p) => sum + (p.budget || 0), 0);
 
-  const totalRevenue = invoiceRevenue + projectRevenue;
+  const totalRevenue = invoiceRevenue + projectBudget;
 
   embed.addFields(
     { name: 'Projects', value: String(client.projects.length), inline: true },

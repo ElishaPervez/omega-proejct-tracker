@@ -87,6 +87,9 @@ export default async function ProjectsPage() {
                         <span>Client: {project.client.name}</span>
                       )}
                       <span>Hours: {formatTime(project.workedSeconds)}</span>
+                      {project.budget > 0 && (
+                        <span>Budget: ${project.budget.toFixed(2)}</span>
+                      )}
                       {project.dueDate && (
                         <span>Due: {formatShortDate(project.dueDate)}</span>
                       )}
